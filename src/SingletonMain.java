@@ -11,5 +11,7 @@ public class SingletonMain {
 			System.out.println("sgt1 과 sgt2 는 다른 객체입니다.");
 		
 		 System.out.println("End.");
+		 
+		 System.out.println("");
 	}
 }

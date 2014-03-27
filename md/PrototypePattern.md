@@ -15,14 +15,117 @@
 ### 3. Java 예제
   예제로서는 게임을 만든다고 했을때, 동일한 아이템을 많은 사용자에게 제공을 해주는 상황이라고 가정을 하겠다.
   ##### 1) 클래스다이어 그램
-  ##### 2) 소스
-  ##### 3) 소스 설명
   
+  ##### 2) 소스
+```
+package ProtoType;
+
+public interface Item extends Cloneable {
+
+	public Item clone();
+	
+	public int getHealth();
+}
+```
+```
+package ProtoType;
+
+public class ItemShotGun implements Item {
+
+	private int health = 100;
+	
+	public ItemShotGun() {
+		// 실제로 여기는 아이템 이미지나 비용이 많이 드는 초기화 작업이 존재하게됨
+	}
+	
+	public Item clone() {
+		return this.clone();
+	}
+	
+	public int getHealth() {
+		return this.health;
+	}
+	
+	public void setHealth( int health ) {
+		this.health = health;
+	}
+}
+```
+```
+package ProtoType;
+
+public class ItemKnife implements Item {
+	
+	private int health = 100;
+
+	public ItemKnife() {
+		// 실제로 여기는 아이템 이미지나 비용이 많이 드는 초기화 작업이 존재하게됨
+	}
+	
+	public Item clone() {
+		return this;
+	}
+	
+	public int getHealth() {
+		return this.health;
+	}
+	
+	public void setHealth( int health ) {
+		this.health = health;
+	}
+}
+
+```
+```
+package ProtoType;
+
+import java.util.HashMap;
+
+public class ItemManager {
+
+	public final static int ITEM_SHOTGUN = 0;
+	public final static int ITEM_KNIFE   = 1;
+	
+	private HashMap<Integer, Item> itemList = new HashMap<Integer, Item>();
+	
+	// 생성자
+	// Item을 초기화 한다.
+	public ItemManager() {
+		itemList.put( ItemManager.ITEM_SHOTGUN, new ItemShotGun() );
+		itemList.put( ItemManager.ITEM_KNIFE  , new ItemKnife()   );
+	}
+	
+	
+	// 
+	/**
+	 * 원하는 item 을 복제해서 제공함.
+	 * @param itemCd 아이템코드
+	 * @return Item 객체를 반환한다.
+	 */
+	public Item getItem( int itemCd ) {
+		return itemList.get( itemCd ).clone();
+	}
+	
+	
+	public static void main(String[] args) {
+
+		ItemManager itemManager = new ItemManager();
+		Item shotgun = itemManager.getItem( ItemManager.ITEM_SHOTGUN );
+		Item knife   = itemManager.getItem( ItemManager.ITEM_KNIFE   );
+	}
+
+}
+
+```
+  ##### 3) 소스 설명
+  - `Item` : Prototype 에 해당하는 인터페이스
+  - `ItemShotGun, ItemKnife` : ConcretePrototype 에 해당함. 
+  - `ItemManager` :  실제 client 부분인데 HashMap을 이용하여 Item 들을 관리하고 있다. client(main함수)가 필요한 객체를 복제(cline)해서 반환한다.
   
 ### 4. 고려사항
 - 다수의 프로토타입 패턴을 이용한 객체를 관리를 해야 할때, HashMap을 이용해서 관리하는게 편리하다. 
-- 얕은복제, 깊은 복제
-- 복제시 초기화
+- 복제를 위한함수 clone 을 설계할때, 얕은복제를 해야할지 깊은 복제를 해야할지 잘 고려해야한다. 값을 복제해주어야 하는 것과 복제하지 않고 서로 참조해야 하는 경우를 잘고려해서 설계해야 할 것이다.
+- 복제후 멤버변수를 적절하게 초기화 해주어야 한다. 
 
 ### 5. 마치며
 Prototype Pattern 상대적으로 다른종류의 객체생성 패턴보다는 쉬울거라 예상이 된다. 필자 또한 쉽게 이해하고 이글을 포스팅 하고 있으니 말이다. 하나하나 공부할때마다 앞서 공부했던 패턴들의 이해가 안되었던 부분들이 이해가 되는 경우도 있다. 그러니 꾸준함이 필요할때!
